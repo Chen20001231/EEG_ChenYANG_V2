@@ -22,48 +22,12 @@ addpath ..\models\
 addpath functions\
 
 
-%{
-% episode 1, 80 seconds
-load('episode_1_monopolar.mat');
-edf_filename = 'DP14.edf';
-idx_start = 1;
-idx_end = 90000;
-%idx_start = 70001;
-%idx_end = 90000;
-dataRead = edfread(edf_filename);
-dataMat = cell2mat(dataRead{:,:});
-%dataMat = monopolar2LAR(dataMat);
-%}
-
-
-% episode 3, 80 seconds
-load('episode_3_LAR.mat');
-edf_filename = 'DP141.edf';
-idx_start = 100001;
-idx_end = 120000;
-dataRead = edfread(edf_filename);
-dataMat = cell2mat(dataRead{:,:});
-dataMat = monopolar2LAR(dataMat);
-
-
-
-%{
-% episode 4, 80 seconds
-load('episode_4_LAR.mat');
-edf_filename = 'DP142.edf';
-idx_start = 204501;
-idx_end = 224500;
-dataRead = edfread(edf_filename);
-dataMat = cell2mat(dataRead{:,:});
-dataMat = monopolar2LAR(dataMat);
-%}
-
-
-
-
-
-
-%dataMat = monopolar2bipolar(dataMat);
+episode_opt = 3;
+reference_opt = 'median';
+% input 1 options, episode: 1, 3, 4
+% input 2 options, reference: 'monopolar', 'bipolar', 'LAR','median'
+% 120s 2min
+[idx_start,idx_end,dataMat,B] = distinguishInput(episode_opt, reference_opt);
 
 
 fs = 250;
@@ -94,9 +58,10 @@ end
 
 x_test = feature';
 
-%% %%%%%%%%%%%%%%%%
+%%
 % Predicted data
 y_pred = predict(B, x_test);
+
 
 %% feature importance
 featureImportance = B.OOBPermutedPredictorDeltaError;
@@ -109,70 +74,15 @@ title('Feature Importance');
 
 %% 分segment统计
 
+
 grouped_data = reshape(y_pred, num_of_channels, []);  % 每一列代表一个组，共 30 列
-counts = sum(strcmp(grouped_data, 'Seizure'));  % 统计每个组中 1 出现的次数
-counts = [counts; sum(strcmp(grouped_data, 'NonSeizure'))];  % 统计每个组中 2 出现的次数
-counts = [counts; sum(strcmp(grouped_data, 'PeriIctalSignals'))];  % 统计每个组中 3 出现的次数
 
-%y_test_segNo = find(~idxTrain == 1);
-y_test_segNo = (1:num_of_segments_testing)';
-
-
-
-%% 画图
-% 创建图形窗口
-figure;
-% 绘制第一个变量
-subplot(2,1,1);
-plot(y_test_segNo, counts(1,:), 'r:', 'LineWidth', 2);  % 红色实线
-hold on;  % 保持当前图形
-plot(y_test_segNo, counts(2,:), 'b:', 'LineWidth', 2); % 绿色虚线
-plot(y_test_segNo, counts(3,:), 'm:', 'LineWidth', 2);  % 蓝色点线
-xlim([min(y_test_segNo) max(y_test_segNo)]);
-% 添加图例
-legend('Seizure', 'NonSeizure', 'PeriIctalSignals');
-% 添加坐标轴标签和标题
-xlabel('Segment index');
-ylabel('Number of channels');
-title(' ');
-
-grid on;
-hold off;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-idx_segment_plot_start = min(y_test_segNo);
-idx_segment_plot_end = max(y_test_segNo);
-
-EEGdataplot = [];
-EEGdataplot = dataMat(idx_start:idx_end,:);
-
-
-set(gca,'linewidth',1,'fontsize',12,'fontname','Arial');
-
-subplot(2,1,2);
-% 定义偏移量，避免信号重叠
-offset = 100;
-% 遍历每个通道并绘制
-hold on;
-%for i = 24
-for i = 1:num_of_channels
-    plot(EEGdataplot(:, i) + (i-1) * offset);
-end
-hold off;
-
-% 添加标签和标题
-xlabel('Samples');
-ylabel('Amplitude');
-title([' ']);
-grid on;
-
-xlim([1,length(EEGdataplot)]);
-ylim([-offset, (num_of_channels-1) * offset + offset]);
-set(gca,'linewidth',1,'fontsize',12,'fontname','Arial');
+plot_lineGraph(grouped_data,dataMat(idx_start:idx_end,:),num_of_channels,episode_opt,reference_opt);
+plot_lineGraph_withPartition(grouped_data,dataMat(idx_start:idx_end,:),num_of_channels,episode_opt,reference_opt);
+plot_pixelGraph(grouped_data,dataMat(idx_start:idx_end,:),num_of_channels,episode_opt,reference_opt);
+% plot_plot3(grouped_data,dataMat(idx_start:idx_end,:),num_of_channels);
 
 updateProgressBar(100);
-
-
 
 
 

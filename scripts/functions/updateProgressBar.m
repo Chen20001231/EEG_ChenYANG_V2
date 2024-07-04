@@ -3,7 +3,7 @@ function updateProgressBar(progressPercent)
     if progressPercent < 0 || progressPercent > 100
         error('进度百分比必须在0到100之间');
     end
-
+    
     progressBar=[];
     temp = length(progressBar);
     totalLength = 50; % 进度条总长度
@@ -16,8 +16,11 @@ function updateProgressBar(progressPercent)
     % 使用 fprintf 打印进度条和百分比
     fprintf('%s %3d%%\n', progressBar, int8(progressPercent));
     
+    
+
     % 当进度达到100%，结束进度条显示
     if progressPercent == 100
         fprintf('\n'); % 换行显示完成的进度条
     end
+
 end
