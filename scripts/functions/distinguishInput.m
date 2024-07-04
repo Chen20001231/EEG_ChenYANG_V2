@@ -2,7 +2,7 @@ function [idx_start,idx_end,dataMat,B] = distinguishInput(episode, reference)
 %DISTINGUISHINPUT Summary of this function goes here
 %   Detailed explanation goes here
 
-episode_num = 3;
+
 
 switch episode
     case 1
@@ -34,17 +34,19 @@ end
 switch reference
     case 'monopolar'
         disp("You have selected monopolar reference"); reference_idx = 1;
+        %dataMat = Zscore_normalization(dataMat);
     case 'bipolar'
         disp("You have selected bipolar reference"); reference_idx = 2;
         dataMat = monopolar2bipolar(dataMat);
     case 'LAR'
         disp("You have selected LAR reference"); reference_idx = 3;
         dataMat = monopolar2LAR(dataMat);
+        %dataMat = Zscore_normalization(dataMat);
     case 'median'
         disp("You have selected median reference"); reference_idx = 4;
         dataMat = monopolar2median(dataMat);
     otherwise
-        output = 'Invalid reference input. Please select a valid option.';
+        disp('Invalid reference input. Please select a valid option.');
 end
 
 
@@ -52,7 +54,8 @@ filename = {'episode_1_monopolar.mat', 'episode_1_bipolar.mat', 'episode_1_LAR.m
             'episode_3_monopolar.mat', 'episode_3_bipolar.mat', 'episode_3_LAR.mat', 'episode_3_median.mat', ...
             'episode_4_monopolar.mat', 'episode_4_bipolar.mat', 'episode_4_LAR.mat', 'episode_4_median.mat'};
 
-load(filename{episode_idx*(episode_num-1)+reference_idx});
+reference_num = 4;
+load(filename{reference_num*(episode_idx-1)+reference_idx});
 
 end
 

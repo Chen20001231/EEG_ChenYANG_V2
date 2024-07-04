@@ -41,12 +41,12 @@ end
 
 subplot(length(partition_num)+1,1,length(partition_num)+1);
 % 定义偏移量，避免信号重叠
-offset = 100;
+offset = 500;
 % 遍历每个通道并绘制
 hold on;
 %for i = 24
 for i = 1:num_of_channels
-    plot(EEGdataplot(:, i) + (i-1) * offset);
+    plot(EEGdataplot(:, i) + (num_of_channels-i) * offset);
 end
 hold off;
 

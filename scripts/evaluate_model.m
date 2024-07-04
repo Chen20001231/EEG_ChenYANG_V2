@@ -22,8 +22,8 @@ addpath ..\models\
 addpath functions\
 
 
-episode_opt = 3;
-reference_opt = 'median';
+episode_opt = 1;
+reference_opt = 'LAR';
 % input 1 options, episode: 1, 3, 4
 % input 2 options, reference: 'monopolar', 'bipolar', 'LAR','median'
 % 120s 2min

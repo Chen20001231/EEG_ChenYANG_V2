@@ -40,7 +40,7 @@ hold off;
 
 subplot(2,1,2);
 % 定义偏移量，避免信号重叠
-offset = 100;
+offset = 500;
 % 遍历每个通道并绘制
 hold on;
 %for i = 24

@@ -30,6 +30,7 @@ episode_opt = 3;
 reference_opt = {'median'};
 flag_plot_difference_with_monopolar = 1;
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % input 1 options, episode: 1, 3, 4                                  %
 % input 2 options, reference: 'monopolar', 'bipolar', 'LAR','median' %
@@ -83,6 +84,5 @@ end
 plot_difference_pixelGraph(grouped_data,dataMat(idx_start:idx_end,:),num_of_channels,episode_opt,reference_opt);
 
 updateProgressBar(100);
-
 
 
